@@ -36,10 +36,10 @@ public sealed record PowerThresholds
     public double CurrentCriticalA { get; init; } = 1550d;
 
     /// <summary>有功功率告警值，单位 MW。</summary>
-    public double PowerAttentionMw { get; init; } = 430d;
+    public double PowerAttentionMw { get; init; } = 500d;
 
     /// <summary>有功功率严重告警值，单位 MW。</summary>
-    public double PowerCriticalMw { get; init; } = 500d;
+    public double PowerCriticalMw { get; init; } = 540d;
 
     /// <summary>“高负荷”区间下限，单位 MW。</summary>
     public double PowerBandHighMw { get; init; } = 400d;

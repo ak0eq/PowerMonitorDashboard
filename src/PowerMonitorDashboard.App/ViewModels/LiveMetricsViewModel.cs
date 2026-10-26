@@ -319,7 +319,7 @@ public sealed class LiveMetricsViewModel : ObservableObject
         VoltageAxisMax = Math.Max(250d, thresholds.VoltageCriticalHighKv + 5d);
         FrequencyAxisMin = Math.Min(48.4d, thresholds.FrequencyCriticalLowHz - 0.3d);
         FrequencyAxisMax = Math.Max(51.6d, thresholds.FrequencyCriticalHighHz + 0.3d);
-        PowerAxisMax = Math.Max(600d, thresholds.PowerCriticalMw * 1.2d);
+        PowerAxisMax = Math.Ceiling(Math.Max(600d, thresholds.PowerCriticalMw * 1.2d) / 100d) * 100d;
 
         VoltageHint = string.Create(CultureInfo.InvariantCulture, $"正常 {thresholds.VoltageAttentionLowKv:F1}～{thresholds.VoltageAttentionHighKv:F1} kV");
         FrequencyHint = string.Create(CultureInfo.InvariantCulture, $"正常 {thresholds.FrequencyAttentionLowHz:F2}～{thresholds.FrequencyAttentionHighHz:F2} Hz");

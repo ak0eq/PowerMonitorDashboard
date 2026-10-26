@@ -114,7 +114,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         ToggleAcquisitionCommand = new RelayCommand(ToggleAcquisition);
         RefreshCommand = new RelayCommand(RefreshNow);
         DisturbanceCommand = new RelayCommand(InjectDisturbance);
-        OpenSettingsCommand = new RelayCommand(() => SettingsRequested?.Invoke(this, EventArgs.Empty));
+        OpenSettingsCommand = new RelayCommand(OpenSettings);
         ExportHistoryCommand = new RelayCommand(ExportHistory);
         ExportAlarmsCommand = new RelayCommand(ExportAlarms);
         ClearHistoryCommand = new RelayCommand(ClearHistory, () => History.Rows.Count > 0);
@@ -326,6 +326,16 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     /// <summary>关于。</summary>
     public RelayCommand AboutCommand { get; }
 
+    /// <summary>打开系统设置。</summary>
+    private void OpenSettings()
+    {
+        _logger.Info("打开系统设置对话框。");
+        SettingsRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>由视图层报告异常（用于诊断窗口创建失败等问题）。</summary>
+    public void ReportError(string message, Exception exception) => _logger.Error(message, exception);
+
     /// <summary>启动采集（若配置允许）。</summary>
     public void Start()
     {
@@ -509,7 +519,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             DisturbanceKind.FrequencyDip
         };
         var kind = kinds[_disturbanceIndex++ % kinds.Length];
-        _source.InjectDisturbance(kind);
+        _source.InjectDisturbance(kind, 1.8d);
 
         var text = kind switch
         {

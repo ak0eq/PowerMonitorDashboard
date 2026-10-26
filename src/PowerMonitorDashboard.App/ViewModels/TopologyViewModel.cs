@@ -358,7 +358,7 @@ public sealed class TopologyViewModel : ObservableObject
             new TopologyNode { Id = "T1", Name = "1号主变", Kind = TopologyNodeKind.Transformer, Level = VoltageLevel.Kv220, X = 196, Y = 90, Width = 58, Height = 34, Detail = "220/10 kV 升压变压器" },
             new TopologyNode { Id = "T2", Name = "2号主变", Kind = TopologyNodeKind.Transformer, Level = VoltageLevel.Kv220, X = 196, Y = 165, Width = 58, Height = 34, Detail = "220/10 kV 升压变压器" },
             new TopologyNode { Id = "T3", Name = "3号主变", Kind = TopologyNodeKind.Transformer, Level = VoltageLevel.Kv220, X = 196, Y = 240, Width = 58, Height = 34, Detail = "220/10 kV 升压变压器" },
-            new TopologyNode { Id = "BUS", Name = "220 kV 母线", Kind = TopologyNodeKind.Busbar, Level = VoltageLevel.Kv220, X = 300, Y = 165, Width = 12, Height = 190, Detail = "双母带旁路接线，连接三台主变" },
+            new TopologyNode { Id = "BUS", Name = "220 kV 母线", Kind = TopologyNodeKind.Busbar, Level = VoltageLevel.Kv220, X = 300, Y = 165, Width = 120, Height = 190, Detail = "双母带旁路接线，连接三台主变" },
             new TopologyNode { Id = "S1", Name = "城东变", Kind = TopologyNodeKind.Substation, Level = VoltageLevel.Kv220, X = 430, Y = 90, Width = 42, Height = 42, Detail = "220 kV 变电站，2×180 MVA" },
             new TopologyNode { Id = "S2", Name = "城南变", Kind = TopologyNodeKind.Substation, Level = VoltageLevel.Kv220, X = 430, Y = 165, Width = 42, Height = 42, Detail = "220 kV 变电站，2×150 MVA" },
             new TopologyNode { Id = "S3", Name = "城西变", Kind = TopologyNodeKind.Substation, Level = VoltageLevel.Kv220, X = 430, Y = 240, Width = 42, Height = 42, Detail = "220 kV 变电站，2×120 MVA" },

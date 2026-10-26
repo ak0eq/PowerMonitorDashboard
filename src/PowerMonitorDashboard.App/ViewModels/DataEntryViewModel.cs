@@ -208,6 +208,17 @@ public sealed class DataEntryViewModel : ObservableObject
     /// <summary>重新执行校验（阈值等外部配置变化时调用）。</summary>
     public void Revalidate() => Validate();
 
+    /// <summary>
+    /// 由视图层报告“输入框绑定校验失败”。WPF 在 ValidationRule 拒绝输入时不会把值写回视图模型，
+    /// 因此保存前必须同时检查界面上的红色边框状态，避免用旧值悄悄保存成功。
+    /// </summary>
+    public void ReportExternalValidationError(string message)
+    {
+        StatusMessage = message;
+        StatusIsError = true;
+        Submitted?.Invoke(this, new DataEntryFeedback(message, false));
+    }
+
     private void Save()
     {
         Validate();

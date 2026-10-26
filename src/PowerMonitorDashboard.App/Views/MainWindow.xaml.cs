@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using PowerMonitorDashboard.ViewModels;
+using WpfValidation = System.Windows.Controls.Validation;
 
 namespace PowerMonitorDashboard.Views;
 
@@ -123,15 +124,23 @@ public partial class MainWindow : Window
             return;
         }
 
-        var viewModel = _viewModel.CreateSettingsViewModel();
-        var dialog = new SettingsWindow(viewModel)
+        try
         {
-            Owner = this
-        };
+            var viewModel = _viewModel.CreateSettingsViewModel();
+            var dialog = new SettingsWindow(viewModel)
+            {
+                Owner = this
+            };
 
-        if (dialog.ShowDialog() == true && dialog.Result is not null)
+            if (dialog.ShowDialog() == true && dialog.Result is not null)
+            {
+                _viewModel.ApplySettings(dialog.Result);
+            }
+        }
+        catch (Exception ex)
         {
-            _viewModel.ApplySettings(dialog.Result);
+            _viewModel.ReportError("打开设置窗口失败。", ex);
+            MessageBox.Show("打开设置窗口失败：" + ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -218,6 +227,13 @@ public partial class MainWindow : Window
                 {
                     LoadMedia();
                     return;
+                }
+
+                // 播放结束后再次点击“播放”时从头开始，而不是停留在最后一帧。
+                if (Media.NaturalDuration.HasTimeSpan
+                    && Media.Position >= Media.NaturalDuration.TimeSpan - TimeSpan.FromMilliseconds(300))
+                {
+                    Media.Position = TimeSpan.Zero;
                 }
 
                 Media.Play();
@@ -397,6 +413,37 @@ public partial class MainWindow : Window
                 HistoryGrid.ScrollIntoView(HistoryGrid.Items[0]);
             }
         }, DispatcherPriority.Background);
+    }
+
+    private void OnLoadRateChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (sender is ProgressBar bar)
+        {
+            bar.ToolTip = $"负荷率 {bar.Value:P1}";
+        }
+    }
+
+    private void OnSaveEntryClick(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        // ValidationRule 拒绝的输入不会写回视图模型，因此必须检查界面校验状态后再保存。
+        var hasError = WpfValidation.GetHasError(VoltageInputBox)
+                       || WpfValidation.GetHasError(CurrentInputBox)
+                       || WpfValidation.GetHasError(PowerInputBox)
+                       || WpfValidation.GetHasError(FrequencyInputBox)
+                       || WpfValidation.GetHasError(TimestampInputBox);
+
+        if (hasError)
+        {
+            _viewModel.Entry.ReportExternalValidationError("存在非法输入，请修正标红字段后再保存。");
+            return;
+        }
+
+        _viewModel.Entry.SaveCommand.Execute(null);
     }
 
     private void OnVoltageLevelSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -118,15 +118,13 @@
             <TextBlock Text="{Binding LoadText, StringFormat=母线电压 {0}}" FontSize="11" Margin="0,4,0,0" Foreground="{StaticResource AccentBrush}" />
           </StackPanel>
         </Grid.ToolTip>
-        <Rectangle Fill="{Binding BorderBrush}" RadiusX="3" RadiusY="3" Opacity="0.9" />
-        <TextBlock Text="220kV" FontSize="8.5" Foreground="{StaticResource TextSecondaryBrush}"
-                   HorizontalAlignment="Center" VerticalAlignment="Center">
-          <TextBlock.LayoutTransform>
-            <RotateTransform Angle="-90" />
-          </TextBlock.LayoutTransform>
-        </TextBlock>
-        <Ellipse x:Name="AlertRing" Stroke="{StaticResource DangerBrush}" StrokeThickness="1.4"
-                 Margin="-6" Opacity="0" Visibility="{Binding IsAlert, Converter={StaticResource BoolToVisibility}}" />
+        <Rectangle Width="12" Fill="{Binding BorderBrush}" RadiusX="3" RadiusY="3" Opacity="0.9"
+                   HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Name}" FontSize="8.5" Foreground="{StaticResource TextSecondaryBrush}"
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-17,0,0" />
+        <Ellipse x:Name="AlertRing" Width="20" Height="{Binding Height}" HorizontalAlignment="Center"
+                 Stroke="{StaticResource DangerBrush}" StrokeThickness="1.4"
+                 Opacity="0" Visibility="{Binding IsAlert, Converter={StaticResource BoolToVisibility}}" />
       </Grid>
       <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding IsAlert}" Value="True">
@@ -287,26 +285,26 @@
             <TextBlock Text="{Binding DateText}" Style="{StaticResource Caption}" HorizontalAlignment="Right" />
           </StackPanel>
           <Button Style="{StaticResource GhostButton}" Command="{Binding ToggleAcquisitionCommand}"
-                  Margin="0,0,6,0" ToolTip="暂停 / 恢复实时采集">
+                  Margin="0,0,6,0" AutomationProperties.Name="暂停或恢复采集" ToolTip="暂停 / 恢复实时采集">
             <StackPanel Orientation="Horizontal">
               <Path Data="{StaticResource IconPause}" Width="11" Height="11" Stretch="Uniform"
                     Fill="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
               <TextBlock Text="{Binding AcquisitionButtonText}" Margin="6,0,0,0" FontSize="11.5" />
             </StackPanel>
           </Button>
-          <Button Style="{StaticResource IconButton}" Command="{Binding RefreshCommand}" ToolTip="立即刷新数据（F5）">
+          <Button Style="{StaticResource IconButton}" Command="{Binding RefreshCommand}" AutomationProperties.Name="刷新数据" ToolTip="立即刷新数据（F5）">
             <Path Data="{StaticResource IconRefresh}" Style="{StaticResource IconPath}" />
           </Button>
-          <Button Style="{StaticResource IconButton}" Command="{Binding DisturbanceCommand}" ToolTip="故障演练：注入一次扰动">
+          <Button Style="{StaticResource IconButton}" Command="{Binding DisturbanceCommand}" AutomationProperties.Name="故障演练" ToolTip="故障演练：注入一次扰动">
             <Path Data="{StaticResource IconWarning}" Style="{StaticResource IconPath}" />
           </Button>
-          <Button Style="{StaticResource IconButton}" Command="{Binding OpenSettingsCommand}" ToolTip="系统设置（Ctrl+,）">
+          <Button Style="{StaticResource IconButton}" Command="{Binding OpenSettingsCommand}" AutomationProperties.Name="系统设置" ToolTip="系统设置（Ctrl+,）">
             <Path Data="{StaticResource IconSettings}" Style="{StaticResource IconPath}" />
           </Button>
-          <Button Style="{StaticResource IconButton}" Command="{Binding ToggleFullScreenCommand}" ToolTip="全屏显示（F11）">
+          <Button Style="{StaticResource IconButton}" Command="{Binding ToggleFullScreenCommand}" AutomationProperties.Name="全屏显示" ToolTip="全屏显示（F11）">
             <Path Data="{StaticResource IconFullscreen}" Style="{StaticResource IconPath}" />
           </Button>
-          <Button Style="{StaticResource IconButton}" Command="{Binding ExitCommand}" ToolTip="退出（Ctrl+Q）">
+          <Button Style="{StaticResource IconButton}" Command="{Binding ExitCommand}" AutomationProperties.Name="退出程序" ToolTip="退出（Ctrl+Q）">
             <Path Data="{StaticResource IconClose}" Style="{StaticResource IconPath}" />
           </Button>
         </StackPanel>
@@ -426,7 +424,7 @@
                        VerticalAlignment="Center" />
             <TextBlock Text="有功功率" Margin="8,0,0,0" Style="{StaticResource Secondary}" />
             <Border Style="{StaticResource Badge}" Margin="8,0,0,0" VerticalAlignment="Center"
-                    Background="#1A2DD4A7">
+                    Background="#1A22303C">
               <TextBlock Text="{Binding Live.Reading.PowerMw, Converter={StaticResource PowerLevel}}"
                          FontSize="9.5" FontWeight="SemiBold"
                          Foreground="{Binding Live.Reading.PowerMw, Converter={StaticResource PowerLevelBrush}}" />
@@ -540,7 +538,8 @@
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <ComboBox ItemsSource="{Binding Topology.LevelOptions}"
+                <ComboBox x:Name="LevelFilterCombo" AutomationProperties.AutomationId="LevelFilter" AutomationProperties.Name="电压等级筛选"
+                          ItemsSource="{Binding Topology.LevelOptions}"
                           SelectedItem="{Binding Topology.SelectedLevel, Mode=TwoWay}"
                           Width="128" Height="28" Margin="12,0,0,0" FontSize="11"
                           SelectionChanged="OnVoltageLevelSelectionChanged" />
@@ -642,7 +641,12 @@
               </StackPanel>
               <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="负荷率" Style="{StaticResource Caption}" VerticalAlignment="Center" />
-                <TextBlock Text="{Binding Live.LoadRateText}" Style="{StaticResource Mono}" Margin="5,0,0,0"
+                <ProgressBar x:Name="LoadRateBar" Width="90" Height="4" Maximum="1"
+                             Value="{Binding Live.LoadRate, Mode=OneWay}"
+                             Style="{StaticResource SlimProgressBar}" Margin="8,0,0,0"
+                             VerticalAlignment="Center" ToolTip="负荷率"
+                             ValueChanged="OnLoadRateChanged" />
+                <TextBlock Text="{Binding Live.LoadRateText}" Style="{StaticResource Mono}" Margin="8,0,0,0"
                            Foreground="{StaticResource AccentBrush}" />
               </StackPanel>
             </Grid>
@@ -837,7 +841,7 @@
 
             <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,6,8">
               <TextBlock Text="电压（kV）" Style="{StaticResource FieldLabel}" />
-              <TextBox Height="34" Tag="0～500，一位小数">
+              <TextBox x:Name="VoltageInputBox" Height="34" AutomationProperties.AutomationId="VoltageInput" AutomationProperties.Name="电压输入" Tag="0～500，一位小数">
                 <TextBox.Text>
                   <Binding Path="Entry.VoltageText" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
@@ -850,7 +854,7 @@
 
             <StackPanel Grid.Row="0" Grid.Column="1" Margin="6,0,0,8">
               <TextBlock Text="电流（A）" Style="{StaticResource FieldLabel}" />
-              <TextBox Height="34" Tag="0～5000，必填">
+              <TextBox x:Name="CurrentInputBox" Height="34" AutomationProperties.AutomationId="CurrentInput" AutomationProperties.Name="电流输入" Tag="0～5000，必填">
                 <TextBox.Text>
                   <Binding Path="Entry.CurrentText" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
@@ -863,7 +867,7 @@
 
             <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,6,8">
               <TextBlock Text="有功功率（MW）" Style="{StaticResource FieldLabel}" />
-              <TextBox Height="34" Tag="留空自动计算">
+              <TextBox x:Name="PowerInputBox" Height="34" AutomationProperties.AutomationId="PowerInput" AutomationProperties.Name="功率输入" Tag="留空自动计算">
                 <TextBox.Text>
                   <Binding Path="Entry.PowerText" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
@@ -876,7 +880,7 @@
 
             <StackPanel Grid.Row="1" Grid.Column="1" Margin="6,0,0,8">
               <TextBlock Text="频率（Hz）" Style="{StaticResource FieldLabel}" />
-              <TextBox Height="34" Tag="47.0～52.0">
+              <TextBox x:Name="FrequencyInputBox" Height="34" AutomationProperties.AutomationId="FrequencyInput" AutomationProperties.Name="频率输入" Tag="47.0～52.0">
                 <TextBox.Text>
                   <Binding Path="Entry.FrequencyText" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
@@ -893,7 +897,7 @@
                 <Button Content="现在" Style="{StaticResource LinkButton}" HorizontalAlignment="Right"
                         Command="{Binding Entry.UseCurrentTimeCommand}" FontSize="11" Margin="0,-3,0,0" />
               </Grid>
-              <TextBox Height="34" Tag="yyyy-MM-dd HH:mm:ss">
+              <TextBox x:Name="TimestampInputBox" Height="34" AutomationProperties.AutomationId="TimestampInput" AutomationProperties.Name="时间戳输入" Tag="yyyy-MM-dd HH:mm:ss">
                 <TextBox.Text>
                   <Binding Path="Entry.TimestampText" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
@@ -951,7 +955,7 @@
 
             <StackPanel Grid.Row="2" Margin="0,8,0,0">
               <StackPanel Orientation="Horizontal">
-                <Button Content="保存数据" Style="{StaticResource PrimaryButton}" Command="{Binding Entry.SaveCommand}"
+                <Button Content="保存数据" Style="{StaticResource PrimaryButton}" Click="OnSaveEntryClick"
                         Width="104" />
                 <Button Content="重置" Style="{StaticResource GhostButton}" Command="{Binding Entry.ResetCommand}"
                         Margin="8,0,0,0" Width="64" />
@@ -1069,10 +1073,10 @@
                           PreviewMouseLeftButtonUp="OnPositionSliderPreviewMouseUp"
                           ValueChanged="OnPositionSliderValueChanged" />
 
-                  <Grid Grid.Row="1" Margin="0,2,0,0">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                  <DockPanel Grid.Row="1" Margin="0,2,0,0" LastChildFill="False">
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                       <Button Style="{StaticResource PlaybackButton}" Command="{Binding Video.PlayPauseCommand}"
-                              ToolTip="播放 / 暂停">
+                              AutomationProperties.Name="播放或暂停" ToolTip="播放 / 暂停">
                         <Grid>
                           <Path Data="{StaticResource IconPlay}" Width="13" Height="13" Stretch="Uniform"
                                 Fill="{StaticResource AccentBrush}"
@@ -1083,12 +1087,12 @@
                         </Grid>
                       </Button>
                       <Button Style="{StaticResource PlaybackButton}" Margin="6,0,0,0" Command="{Binding Video.StopCommand}"
-                              ToolTip="停止">
+                              AutomationProperties.Name="停止播放" ToolTip="停止">
                         <Path Data="{StaticResource IconStop}" Width="12" Height="12" Stretch="Uniform"
                               Fill="{StaticResource TextSecondaryBrush}" />
                       </Button>
                       <Button Style="{StaticResource PlaybackButton}" Margin="6,0,0,0" Command="{Binding Video.ToggleMuteCommand}"
-                              ToolTip="静音 / 取消静音">
+                              AutomationProperties.Name="静音切换" ToolTip="静音 / 取消静音">
                         <Grid>
                           <Path Data="{StaticResource IconVolume}" Width="13" Height="13" Stretch="Uniform"
                                 Fill="{StaticResource TextSecondaryBrush}"
@@ -1099,15 +1103,15 @@
                         </Grid>
                       </Button>
                       <Slider Width="58" Margin="8,0,0,0" Minimum="0" Maximum="1"
-                              Value="{Binding Video.Volume, Mode=TwoWay}" ToolTip="音量" />
+                              Value="{Binding Video.Volume, Mode=TwoWay}" AutomationProperties.Name="音量调节" ToolTip="音量" />
                       <TextBlock Text="{Binding Video.PositionText}" Style="{StaticResource Mono}" Margin="10,0,0,0"
                                  VerticalAlignment="Center" />
                       <TextBlock Text="/" Style="{StaticResource Caption}" Margin="3,0,3,0" VerticalAlignment="Center" />
                       <TextBlock Text="{Binding Video.DurationText}" Style="{StaticResource Caption}" VerticalAlignment="Center" />
                     </StackPanel>
-                    <TextBlock Text="{Binding Video.StateText}" Style="{StaticResource Caption}" HorizontalAlignment="Right"
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding Video.StateText}" Style="{StaticResource Caption}"
                                VerticalAlignment="Center" />
-                  </Grid>
+                  </DockPanel>
                 </Grid>
               </Border>
             </Grid>

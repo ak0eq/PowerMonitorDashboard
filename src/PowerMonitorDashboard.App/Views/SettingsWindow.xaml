@@ -90,11 +90,11 @@
                 </Grid>
               </StackPanel>
 
-              <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,4,0,0">
-                <CheckBox Content="启动后自动开始采集" IsChecked="{Binding AutoStart}" />
-                <CheckBox Content="历史表格自动滚动" IsChecked="{Binding AutoScroll}" Margin="22,0,0,0" />
-                <CheckBox Content="显示数据质量列" IsChecked="{Binding ShowQuality}" Margin="22,0,0,0" />
-              </StackPanel>
+              <WrapPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,4,0,0">
+                <CheckBox Content="启动后自动开始采集" IsChecked="{Binding AutoStart}" Margin="0,4,22,4" />
+                <CheckBox Content="历史表格自动滚动" IsChecked="{Binding AutoScroll}" Margin="0,4,22,4" />
+                <CheckBox Content="显示数据质量列" IsChecked="{Binding ShowQuality}" Margin="0,4,0,4" />
+              </WrapPanel>
             </Grid>
           </StackPanel>
         </Border>

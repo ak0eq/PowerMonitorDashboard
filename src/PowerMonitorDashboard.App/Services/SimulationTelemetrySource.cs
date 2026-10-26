@@ -29,7 +29,9 @@ public interface ITelemetrySource : IDisposable
     void ProduceNow();
 
     /// <summary>注入一次扰动，用于告警演练。</summary>
-    void InjectDisturbance(DisturbanceKind kind);
+    /// <param name="kind">扰动类型。</param>
+    /// <param name="magnitude">扰动幅度倍数。</param>
+    void InjectDisturbance(DisturbanceKind kind, double magnitude = 1d);
 }
 
 /// <summary>
@@ -108,14 +110,14 @@ public sealed class SimulationTelemetrySource : ITelemetrySource
     }
 
     /// <inheritdoc />
-    public void InjectDisturbance(DisturbanceKind kind)
+    public void InjectDisturbance(DisturbanceKind kind, double magnitude = 1d)
     {
         lock (_simulatorGate)
         {
-            _simulator.InjectDisturbance(kind);
+            _simulator.InjectDisturbance(kind, magnitude);
         }
 
-        _logger.Info($"已注入扰动：{kind}。");
+        _logger.Info($"已注入扰动：{kind}（幅度 {magnitude:F1}）。");
     }
 
     /// <inheritdoc />
