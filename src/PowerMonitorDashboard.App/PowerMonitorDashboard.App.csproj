@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>PowerMonitorDashboard</RootNamespace>
+    <AssemblyName>PowerMonitorDashboard</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+    <ApplicationIcon Condition="Exists('Assets\images\app.ico')">Assets\images\app.ico</ApplicationIcon>
+    <Description>电力行业可视化大屏监控系统（WPF）</Description>
+    <AssemblyTitle>电力行业可视化大屏监控系统</AssemblyTitle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PowerMonitorDashboard.Core\PowerMonitorDashboard.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
