@@ -68,7 +68,7 @@ public sealed class StatusEvaluatorTests
     [Fact]
     public void Overload_ShouldBeCritical()
     {
-        var evaluation = StatusEvaluator.Evaluate(TestData.Reading(power: 510d), Thresholds);
+        var evaluation = StatusEvaluator.Evaluate(TestData.Reading(power: 550d), Thresholds);
 
         Assert.Equal(OperatingStatus.Critical, evaluation.Status);
         Assert.True(evaluation.IsPowerOutOfBand);
@@ -172,7 +172,7 @@ public sealed class AlarmStateMachineTests
     public void Acknowledge_ShouldMarkAlarmAsAcknowledged()
     {
         var machine = new AlarmStateMachine();
-        machine.Update(TestData.Reading(power: 440d), Thresholds, TestData.Now);
+        machine.Update(TestData.Reading(power: 510d), Thresholds, TestData.Now);
         var alarm = machine.ActiveAlarms.Single();
 
         Assert.True(machine.Acknowledge(alarm.Id, TestData.Now.AddSeconds(2)));

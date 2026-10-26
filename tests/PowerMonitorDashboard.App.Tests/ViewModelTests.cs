@@ -248,7 +248,7 @@ public sealed class HistoryViewModelTests
 
         viewModel.ShowOnlyAbnormal = true;
 
-        Assert.Equal(1, viewModel.View.Cast<object>().Count());
+        Assert.Single(viewModel.View.Cast<object>());
         Assert.Equal("仅异常", viewModel.FilterText);
     });
 
