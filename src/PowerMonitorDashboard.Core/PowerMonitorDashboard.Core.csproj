@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>PowerMonitorDashboard.Core</RootNamespace>
+    <AssemblyName>PowerMonitorDashboard.Core</AssemblyName>
+    <Description>电力监控大屏的核心领域层：数据模型、校验规则、告警状态机、历史数据与仿真数据源。</Description>
+  </PropertyGroup>
+
+</Project>
