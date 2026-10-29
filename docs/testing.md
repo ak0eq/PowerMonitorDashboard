@@ -4,14 +4,14 @@
 
 - 框架：xUnit 2.9.3 + Microsoft.NET.Test.Sdk
 - 运行：`dotnet test PowerMonitorDashboard.sln`
-- 规模：**156 个测试**（Core 113 + App 43），全部通过，耗时 < 1 s（不含构建）
+- 规模：**158 个测试**（Core 113 + App 45），全部通过，耗时 < 1 s（不含构建）
 
 ## 2. 测试项目
 
 | 项目 | 目标框架 | 覆盖内容 |
 | --- | --- | --- |
 | `PowerMonitorDashboard.Core.Tests` | `net10.0` | 功率换算、负荷曲线、仿真物理自洽、校验规则、状态评估、告警状态机、历史缓冲、CSV、配置序列化 |
-| `PowerMonitorDashboard.App.Tests` | `net10.0-windows` | 值转换器、实时指标、录入校验、历史筛选、告警确认、视频状态机、设置构建（WPF 集合视图在 STA 线程运行） |
+| `PowerMonitorDashboard.App.Tests` | `net10.0-windows` | 值转换器、实时指标、录入校验、历史筛选、告警确认、视频状态机（含循环）、设置构建（WPF 集合视图在 STA 线程运行） |
 
 ## 3. 覆盖范围
 
@@ -46,7 +46,7 @@
 | `DataEntryViewModelTests` | 默认值、电压/小数/未来时间阻断、合法提交、填入实时值、现在按钮 |
 | `HistoryViewModelTests` | 最新优先、显示上限、异常筛选、载入状态评估 |
 | `AlarmPanelViewModelTests` | 活动计数、严重计数、确认命令、清空 |
-| `VideoViewModelTests` | 源设置、时长与就绪、进度、跳转钳制、播放请求、失败、结束 |
+| `VideoViewModelTests` | 源设置、时长与就绪、进度、跳转钳制、播放请求、循环开关、循环重启、失败、结束 |
 | `SettingsViewModelTests` | 合法构建、非法拒绝、恢复默认 |
 
 ## 4. 测试技巧
@@ -77,6 +77,6 @@
 
 ```
 PowerMonitorDashboard.Core.Tests   通过: 113  失败: 0
-PowerMonitorDashboard.App.Tests    通过:  43  失败: 0
-合计                               通过: 156  失败: 0
+PowerMonitorDashboard.App.Tests    通过:  45  失败: 0
+合计                               通过: 158  失败: 0
 ```

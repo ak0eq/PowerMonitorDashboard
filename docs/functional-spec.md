@@ -55,7 +55,7 @@
 
 ### 2.4 视频与动画
 
-- `MediaElement` 播放 42 秒安全教学视频（H.264/AAC），`LoadedBehavior=Manual` 精确控制。
+- `MediaElement` 播放约 97 秒的安全教学视频（1280×720，H.264/AAC），`LoadedBehavior=Manual` 精确控制，默认循环播放。
 - 播放 / 暂停 / 停止 / 静音 / 音量滑条 / 进度条拖动跳转 / 时间显示；`MediaOpened` 获取时长并自动播放；`MediaFailed` 显示错误与重试。
 - 播放时背景 `ColorAnimation` 缓慢循环渐变；暂停时暂停、停止时复位。
 - 馈线负荷柱状图使用 `DoubleAnimationUsingKeyFrames` 循环模拟功率波动，幅度与实时负荷率联动。
