@@ -28,6 +28,7 @@ public sealed class VideoViewModel : ObservableObject
     private bool _hasError;
     private bool _isReady;
     private bool _isMuted;
+    private bool _isLooping = true;
     private double _volume = 0.75d;
     private double _positionSeconds;
     private double _durationSeconds;
@@ -128,6 +129,22 @@ public sealed class VideoViewModel : ObservableObject
             }
         }
     }
+
+    /// <summary>是否循环播放。默认开启：教学视频在监控大屏上循环展播。</summary>
+    public bool IsLooping
+    {
+        get => _isLooping;
+        set
+        {
+            if (SetProperty(ref _isLooping, value))
+            {
+                OnPropertyChanged(nameof(LoopStateText));
+            }
+        }
+    }
+
+    /// <summary>循环状态文本，用于 ToolTip 与无障碍名称。</summary>
+    public string LoopStateText => IsLooping ? "循环播放：开" : "循环播放：关";
 
     /// <summary>音量 0～1（与 MediaElement 双向绑定）。</summary>
     public double Volume
@@ -275,6 +292,18 @@ public sealed class VideoViewModel : ObservableObject
         PositionSeconds = DurationSeconds;
         _logger.Info("视频播放结束。");
     }
+
+    /// <summary>循环播放重新开始。</summary>
+    public void ReportLoopRestart()
+    {
+        PositionSeconds = 0d;
+        IsPlaying = true;
+        _logger.Info("视频循环播放。");
+    }
+
+    /// <summary>记录媒体结束事件的位置与时长，便于诊断循环播放。</summary>
+    public void ReportMediaEnded(TimeSpan position, TimeSpan duration)
+        => _logger.Info($"媒体结束：position={position.TotalSeconds:F1}s，duration={duration.TotalSeconds:F1}s，循环={IsLooping}。");
 
     /// <summary>设置播放状态。</summary>
     public void SetPlaying(bool playing)

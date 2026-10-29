@@ -4,8 +4,8 @@
     python tools/media/generate_training_video.py
 
 输出：
-    src/PowerMonitorDashboard.App/Assets/video/safety-training.mp4
-    src/PowerMonitorDashboard.App/Assets/images/video-poster.png
+    src/PowerMonitorDashboard.App/Assets/video/demo-training.mp4
+    src/PowerMonitorDashboard.App/Assets/images/video-poster-demo.png
     src/PowerMonitorDashboard.App/Assets/images/app.ico
     src/PowerMonitorDashboard.App/Assets/images/logo.png
 """
@@ -333,8 +333,8 @@ def main() -> None:
     try:
         print(f"渲染 {DURATION:.1f} 秒视频到临时目录 {frame_dir}")
         render_frames(frame_dir)
-        encode_video(frame_dir, VIDEO_DIR / "safety-training.mp4")
-        render_poster(frame_dir, IMAGE_DIR / "video-poster.png")
+        encode_video(frame_dir, VIDEO_DIR / "demo-training.mp4")
+        render_poster(frame_dir, IMAGE_DIR / "video-poster-demo.png")
     finally:
         shutil.rmtree(frame_dir, ignore_errors=True)
 

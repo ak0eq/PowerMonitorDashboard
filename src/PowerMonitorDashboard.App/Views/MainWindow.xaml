@@ -1102,6 +1102,10 @@
                                 Visibility="{Binding Video.IsMuted, Converter={StaticResource BoolToVisibility}}" />
                         </Grid>
                       </Button>
+                      <CheckBox Content="循环" IsChecked="{Binding Video.IsLooping}" Margin="10,0,0,0"
+                                FontSize="10.5" VerticalAlignment="Center"
+                                ToolTip="{Binding Video.LoopStateText}"
+                                AutomationProperties.Name="循环播放" />
                       <Slider Width="58" Margin="8,0,0,0" Minimum="0" Maximum="1"
                               Value="{Binding Video.Volume, Mode=TwoWay}" AutomationProperties.Name="音量调节" ToolTip="音量" />
                       <TextBlock Text="{Binding Video.PositionText}" Style="{StaticResource Mono}" Margin="10,0,0,0"

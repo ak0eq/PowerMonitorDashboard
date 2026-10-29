@@ -392,6 +392,31 @@ public sealed class VideoViewModelTests
     }
 
     [Fact]
+    public void IsLooping_ShouldDefaultToTrueAndTrackState()
+    {
+        Assert.True(_viewModel.IsLooping);
+        Assert.Contains("开", _viewModel.LoopStateText);
+
+        _viewModel.IsLooping = false;
+
+        Assert.False(_viewModel.IsLooping);
+        Assert.Contains("关", _viewModel.LoopStateText);
+    }
+
+    [Fact]
+    public void ReportLoopRestart_ShouldResetPositionAndKeepPlaying()
+    {
+        _viewModel.ReportOpened(TimeSpan.FromSeconds(97.5));
+        _viewModel.ReportPosition(TimeSpan.FromSeconds(97.5));
+
+        _viewModel.ReportLoopRestart();
+
+        Assert.Equal(0d, _viewModel.PositionSeconds);
+        Assert.True(_viewModel.IsPlaying);
+        Assert.Equal("00:00", _viewModel.PositionText);
+    }
+
+    [Fact]
     public void ReportEnded_ShouldStopPlaying()
     {
         _viewModel.ReportOpened(TimeSpan.FromSeconds(42));

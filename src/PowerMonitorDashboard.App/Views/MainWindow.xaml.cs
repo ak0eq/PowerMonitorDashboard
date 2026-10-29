@@ -292,7 +292,26 @@ public partial class MainWindow : Window
 
     private void OnMediaEnded(object sender, RoutedEventArgs e)
     {
-        _viewModel?.Video.ReportEnded();
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        var duration = Media.NaturalDuration.HasTimeSpan ? Media.NaturalDuration.TimeSpan : TimeSpan.Zero;
+        _viewModel.Video.ReportMediaEnded(Media.Position, duration);
+
+        // 大屏展播默认循环：回到开头继续播放，同时保持背景渐变不中断。
+        if (_viewModel.Video.IsLooping)
+        {
+            Media.Stop();
+            Media.Position = TimeSpan.Zero;
+            Media.Play();
+            _viewModel.Video.ReportLoopRestart();
+            StartBackgroundAnimation();
+            return;
+        }
+
+        _viewModel.Video.ReportEnded();
         StopBackgroundAnimation();
     }
 
